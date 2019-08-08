@@ -23,10 +23,12 @@ public class Bounce {
   private static double vx; // x-velocity                                                                          
   private static double vy; // y-velocity 
 
+  private static double[] head = new double[2]; // position of the head of the ball
+
   private static boolean flag = false;
   private static boolean quit = true;
   private static boolean[][] grid = new boolean[20][20]; // tracks what type of block is filled
-  private static HashMap<Double, Double> filledBlocks = new HashMap<>();
+  private static HashMap<Integer, Integer> filledBlocks = new HashMap<>();
 
   private static void setup() {
     // prepare the canvas                                                                                        
@@ -39,6 +41,8 @@ public class Bounce {
     ry = 0.860;
     vx = 0.015 * xScale;    // velocity                                                                          
     vy = 0.023 * yScale;
+    head[0] = rx + radius;
+    head[1] = ry + radius;
     radius = xScale / 20;   // radius                                                                            
   }
 
@@ -50,6 +54,10 @@ public class Bounce {
     // update position                                                                                           
     rx = rx + vx;
     ry = ry + vy;
+
+    head[0] += vx;
+    head[1] += vy;
+
   }
 
   private static void generateBlocks(int N){ 
@@ -83,10 +91,7 @@ public class Bounce {
         else{
           StdDraw.setPenColor(StdDraw.BLUE);
           StdDraw.filledRectangle(2 * radius * (j - xScale + 2.5 * border), 2 * radius * (i - yScale + 2.5 * border), radius, radius);
-          // the x will be the key and the y will be the value
-          filledBlocks.put((2 * radius * (j - xScale + 2.5 * border)), (2 * radius * (i - yScale + 2.5 * border)));
-          // trueBlocksX.add(2*radius*(j-xScale+2.5*border));
-          // trueBlocksY.add(2*radius*(i-yScale+2.5*border));
+          filledBlocks.put((int) Math.rint(2 * radius * (j - xScale + 2.5 * border)), (int) Math.rint(2 * radius * (i - yScale + 2.5 * border)));
         }
       }
     }
