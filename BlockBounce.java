@@ -10,18 +10,18 @@
 
 import java.util.ArrayList;
 public class BlockBounce {
-    // Constants                                                                                                     
-    private final static double xScale = 10.0;
-    private final static double yScale = 10.0;
-    private final static double border = 0.2;
- 
-    // These variables are shared across all methods                                                                 
-    private static double rx; // x-position of the ball                                                              
-    private static double ry; // y-position of the ball                                                              
-    private static double radius; // of the ball 
- 
-    private static double vx; // x-velocity                                                                          
-    private static double vy; // y-velocity 
+  // Constants                                                                                                     
+  private final static double xScale = 10.0;
+  private final static double yScale = 10.0;
+  private final static double border = 0.2;
+
+  // These variables are shared across all methods                                                                 
+  private static double rx; // x-position of the ball                                                              
+  private static double ry; // y-position of the ball                                                              
+  private static double radius; // of the ball 
+
+  private static double vx; // x-velocity                                                                          
+  private static double vy; // y-velocity 
 	private static boolean[][] grid = new boolean[20][20]; // tracks what type of block is filled
 	private static ArrayList<Double> trueBlocksX = new ArrayList<Double>(); // keeps track of the x coordinate for filled blocks
 	private static ArrayList<Double> trueBlocksY = new ArrayList<Double>(); // keeps track of the y coordinate for filled blocks
