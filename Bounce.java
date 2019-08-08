@@ -58,6 +58,8 @@ public class Bounce {
     head[0] += vx;
     head[1] += vy;
 
+    detect();
+
   }
 
   private static void generateBlocks(int N){ 
@@ -98,7 +100,9 @@ public class Bounce {
   }
 
   private static void detect() {
-
+    if (grid[(int) Math.rint(rx + 10)][(int) Math.rint(ry + 10)]) {
+      System.out.println("hit");
+    }
   } 
 
   private static void repaint() {
