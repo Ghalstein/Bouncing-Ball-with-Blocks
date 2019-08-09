@@ -38,8 +38,8 @@ public class BlockBounce {
       // initial values of the animnation                                                                          
       rx = 0.480;             // ball position                                                                     
       ry = 0.860;
-      vx = 0.009 * xScale;    // velocity                                                                          
-      vy = 0.007 * yScale;
+      vx = 0.02 * xScale;    // velocity                                                                          
+      vy = 0.022 * yScale;
       radius = xScale / 20;   // radius                                                                            
     }
 
@@ -214,7 +214,7 @@ public class BlockBounce {
     	}
       updateBallPosition();
       repaint();
-      StdDraw.pause(4);
+      StdDraw.pause(20);
 			if(!quit){ // Flag to quit the program
 				StdDraw.pause(3000);
 				System.exit(1);
