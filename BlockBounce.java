@@ -9,6 +9,7 @@
  ******************************************************************************/
 
 import java.util.*;
+import java.lang.*;
 public class BlockBounce {
   // Constants                                                                                                     
   private final static double xScale = 10.0;
@@ -178,6 +179,9 @@ public class BlockBounce {
 		generateBlocks(N);
     // main animation loop                                                                                       
     while (quit)  {
+    	if (StdDraw.isMousePressed()) {
+
+    	}
       updateBallPosition();
       repaint();
       StdDraw.pause(4);
