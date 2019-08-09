@@ -37,8 +37,8 @@ public class BlockBounce {
       // initial values of the animnation                                                                          
       rx = 0.480;             // ball position                                                                     
       ry = 0.860;
-      vx = 0.015 * xScale;    // velocity                                                                          
-      vy = 0.023 * yScale;
+      vx = 0.009 * xScale;    // velocity                                                                          
+      vy = 0.007 * yScale;
       radius = xScale / 20;   // radius                                                                            
     }
 
@@ -53,43 +53,35 @@ public class BlockBounce {
       ry = ry + vy;
 	  }
 
-	  private static void detect() {
-
-	  }
-
 		private static void detectBlock(){ // Detects if a ball is near a box and manipulates the direction of the ball upon detection
+			boolean hitX = false;
+			boolean hitY = false;
 			for(int i = 0; i < trueBlocksX.size(); i++){ 
 				if((((trueBlocksX.get(i) + 1.5*radius) > (rx + vx)) && (trueBlocksX.get(i) < (rx + vx))) && // detects right side of box
 				((trueBlocksY.get(i) + 1.5*radius) > (ry + vy) && (trueBlocksY.get(i) - 1.5*radius) < (ry + vy))){
-					vx = -vx;
-					if(flag){
-						disappear(i);
-						return;
-					}
+					hitX = true;
 				}
 				else if((((trueBlocksX.get(i) - 1.5*radius) < (rx + vx)) && (trueBlocksX.get(i) > (rx + vx))) && // detects left side of box
 				((trueBlocksY.get(i) + 1.5*radius) > (ry + vy) && (trueBlocksY.get(i) - 1.5*radius) < (ry + vy))){
-					vx = -vx;
-					if(flag){
-						disappear(i);
-						return;
-					}
+					hitX = true;
 				}
 				else if((((trueBlocksY.get(i) + 1.5*radius) > (ry + vy)) && (trueBlocksY.get(i) < (ry + vy))) && // detects top of box
 				((trueBlocksX.get(i) + 1.5*radius) > (rx + vx) && (trueBlocksX.get(i) - 1.5*radius) < (rx + vx))){
-					vy = -vy;
-					if(flag){
-						disappear(i);
-						return;
-					}
+					hitY = true;
 				}
 				else if((((trueBlocksY.get(i) - 1.5*radius) < (ry + vy)) && (trueBlocksY.get(i) > (ry + vy))) && // detects bottom of box
 				((trueBlocksX.get(i) + 1.5*radius) > (rx + vx) && (trueBlocksX.get(i) - 1.5*radius) < (rx + vx))){
+					hitY = true;
+				}
+				if (hitX) {
+					vx = -vx;
+				}
+				else if (hitY) {
 					vy = -vy;
-					if(flag){
-						disappear(i);
-						return;
-					}
+				}
+				if ((hitY || hitX) && flag) {
+					disappear(i);
+					return;
 				}			
 			}	
 		}
@@ -188,7 +180,7 @@ public class BlockBounce {
     while (quit)  {
       updateBallPosition();
       repaint();
-      StdDraw.pause(20);
+      StdDraw.pause(4);
 			if(!quit){ // Flag to quit the program
 				StdDraw.pause(3000);
 				System.exit(1);
