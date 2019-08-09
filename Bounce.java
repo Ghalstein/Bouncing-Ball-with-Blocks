@@ -38,8 +38,8 @@ public class Bounce {
     // initial values of the animnation                                                                          
     rx = 0.480;             // ball position                                                                     
     ry = 0.860;
-    vx = 0.015 * xScale;    // velocity                                                                          
-    vy = 0.023 * yScale;
+    vx = 0.005 * xScale;    // velocity                                                                          
+    vy = 0.005 * yScale;
     head[0] = rx + radius;
     head[1] = ry + radius;
     radius = xScale / 20;   // radius                                                                            
@@ -52,7 +52,8 @@ public class Bounce {
     // update position                                                                                           
     rx = rx + vx;
     ry = ry + vy;
-    detect();
+    detectY();
+    detectX();
 
     head[0] += vx;
     head[1] += vy;
@@ -61,7 +62,7 @@ public class Bounce {
 
   private static void generateBlocks(int N){ 
     // createes boxes at a random location on the grid
-    for(int i = 0; i < N; i++){
+    for(int i = 0; i < N; i++) {
       int tempX = (int)(Math.random()*20);
       int tempY = (int)(Math.random()*20);
       if(grid[tempX][tempY]){
@@ -115,90 +116,141 @@ public class Bounce {
     else return true;
   }
 
-  private static void detect() {
+  private static void detectY() {
 
-    int gridX = 0;
-    int gridY = 0;
-
-    if (isYGoingOut()) {
+    if (!isYGoingOut()) {
       if (direction(vy)) {
-        gridY = 19;
+        if (grid[(int)Math.rint(ry)][(int)Math.rint(ry + radius)]) {
+          vy = -vy;
+        }
+        else if ((int)Math.rint(ry + 2 * radius) < 20) { 
+          if (grid[(int)Math.rint(ry)][(int)Math.rint(ry + 2 * radius)]) {
+            vy = -vy;
+          }
+        }
       }
       else {
-        gridY = 0;
+        if (grid[(int)Math.rint(ry)][(int)Math.rint(ry - radius)]) {
+          vy = -vy;
+        }
+        else if ((int)Math.rint(ry + 2 * radius) > -20) { 
+          if (grid[(int)Math.rint(ry)][(int)Math.rint(ry - 2 * radius)]) {
+            vy = -vy;
+          }
+        }
       }
     }
-    else if (direction(vy)) {
-      gridY = (int) Math.rint(ry + radius) + 9;
-    }
-    else {
-      gridY = (int) Math.rint(ry - radius) + 10;
-    }
+  }
 
-    if (isXGoingOut()) {
+  private static void detectX() {
+    if (!isXGoingOut()) {
       if (direction(vx)) {
-        gridX = 19;
+        if (grid[(int)Math.rint(rx)][(int)Math.rint(rx + radius)]) {
+          vx = -vx;
+        }
+        else if ((int)Math.rint(rx + 2 * radius) < 20) { 
+          if (grid[(int)Math.rint(rx)][(int)Math.rint(rx + 2 * radius)]) {
+            vx = -vx;
+          }
+        }
       }
-      else {
-        gridX = 0;
-      }
-    }
-    else if (direction(vx)) { 
-      gridX = (int) Math.rint(rx + radius) + 9;
     }
     else {
-      gridX = (int) Math.rint(rx - radius) + 10;
+      if (grid[(int)Math.rint(rx)][(int)Math.rint(rx - radius)]) {
+        vx = -vx;
+      }
+      else if ((int)Math.rint(rx + 2 * radius) > -20) { 
+        if (grid[(int)Math.rint(rx)][(int)Math.rint(rx - 2 * radius)]) {
+          vx = -vx;
+        }
+      }
     }
+  }
 
-    if (direction(vx) && direction(vy) && grid[gridX][gridY]) {
-      if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) < Math.abs((ry + radius) - Math.abs(Math.rint(ry + radius)))) {
-        vx = -vx;
-      }
-      else if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) > Math.abs(Math.abs(ry + radius) - Math.abs(Math.rint(ry + radius)))) {
-        vy = -vy;
-      }
-      else {
-        vx = -vx;
-        vy = -vy;
-      }
-    }
-    else if (!direction(vx) && direction(vy) && grid[gridX][gridY]) {
-      if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) < Math.abs(Math.abs(ry + radius) - Math.abs(Math.rint(ry + radius)))) {
-        vx = -vx;
-      }
-      else if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) > Math.abs(Math.abs(ry + radius) - Math.abs(Math.rint(ry + radius)))) {
-        vy = -vy;
-      }
-      else {
-        vx = -vx;
-        vy = -vy;
-      }
-    }
-    else if (direction(vx) && !direction(vy) && grid[gridX][gridY]) {
-      if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) < Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
-        vx = -vx;
-      }
-      else if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) > Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
-        vy = -vy;
-      }
-      else {
-        vx = -vx;
-        vy = -vy;
-      }
-    }
-    else if ((!direction(vx) && !direction(vy) && grid[gridX][gridY])) {
-      if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) < Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
-        vx = -vx;
-      }
-      else if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) > Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
-        vy = -vy;
-      }
-      else {
-        vx = -vx;
-        vy = -vy;
-      }
-    }
-  } 
+  // private static void detect() {
+
+  //   int gridX = 0;
+  //   int gridY = 0;
+
+  //   if (isYGoingOut()) {
+  //     if (direction(vy)) {
+  //       gridY = 19;
+  //     }
+  //     else {
+  //       gridY = 0;
+  //     }
+  //   }
+  //   else if (direction(vy)) {
+  //     gridY = (int) Math.rint(ry + radius) + 9;
+  //   }
+  //   else {
+  //     gridY = (int) Math.rint(ry - radius) + 10;
+  //   }
+
+  //   if (isXGoingOut()) {
+  //     if (direction(vx)) {
+  //       gridX = 19;
+  //     }
+  //     else {
+  //       gridX = 0;
+  //     }
+  //   }
+  //   else if (direction(vx)) { 
+  //     gridX = (int) Math.rint(rx + radius) + 9;
+  //   }
+  //   else {
+  //     gridX = (int) Math.rint(rx - radius) + 10;
+  //   }
+
+  //   if (direction(vx) && direction(vy) && grid[gridX][gridY]) {
+  //     if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) < Math.abs((ry + radius) - Math.abs(Math.rint(ry + radius)))) {
+  //       vx = -vx;
+  //     }
+  //     else if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) > Math.abs(Math.abs(ry + radius) - Math.abs(Math.rint(ry + radius)))) {
+  //       vy = -vy;
+  //     }
+  //     else {
+  //       vx = -vx;
+  //       vy = -vy;
+  //     }
+  //   }
+  //   else if (!direction(vx) && direction(vy) && grid[gridX][gridY]) {
+  //     if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) < Math.abs(Math.abs(ry + radius) - Math.abs(Math.rint(ry + radius)))) {
+  //       vx = -vx;
+  //     }
+  //     else if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) > Math.abs(Math.abs(ry + radius) - Math.abs(Math.rint(ry + radius)))) {
+  //       vy = -vy;
+  //     }
+  //     else {
+  //       vx = -vx;
+  //       vy = -vy;
+  //     }
+  //   }
+  //   else if (direction(vx) && !direction(vy) && grid[gridX][gridY]) {
+  //     if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) < Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
+  //       vx = -vx;
+  //     }
+  //     else if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) > Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
+  //       vy = -vy;
+  //     }
+  //     else {
+  //       vx = -vx;
+  //       vy = -vy;
+  //     }
+  //   }
+  //   else if ((!direction(vx) && !direction(vy) && grid[gridX][gridY])) {
+  //     if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) < Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
+  //       vx = -vx;
+  //     }
+  //     else if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) > Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
+  //       vy = -vy;
+  //     }
+  //     else {
+  //       vx = -vx;
+  //       vy = -vy;
+  //     }
+  //   }
+  // } 
 
   private static void repaint() {
     // clear the background                                                                                      
@@ -246,7 +298,7 @@ public class Bounce {
     while (quit)  {
       updateBallPosition();
       repaint();
-      StdDraw.pause(20);
+      StdDraw.pause(2);
       if(!quit){ // Flag to quit the program
         StdDraw.pause(3000);
         System.exit(1);
