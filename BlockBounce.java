@@ -8,7 +8,7 @@
  *  Same program but cleaned-up from the Princeton version.
  ******************************************************************************/
 
-import java.util.ArrayList;
+import java.util.*;
 public class BlockBounce {
   // Constants                                                                                                     
   private final static double xScale = 10.0;
@@ -45,12 +45,16 @@ public class BlockBounce {
     private static void updateBallPosition() {
         // bounce off wall according to law of elastic collision                                                     
 		  if ((Math.abs(rx + vx) > xScale - radius)) vx = -vx;
-	      if (Math.abs(ry + vy) > yScale - radius) vy = -vy;
-				// detect block 
-				detectBlock(); // detection method is called
-	        // update position                                                                                           
-	        rx = rx + vx;
-	        ry = ry + vy;
+	    if ((Math.abs(ry + vy) > yScale - radius)) vy = -vy;
+			// detects the block 
+			detectBlock(); // detection method is called
+      // update position                                                                                           
+      rx = rx + vx;
+      ry = ry + vy;
+	  }
+
+	  private static void detect() {
+
 	  }
 
 		private static void detectBlock(){ // Detects if a ball is near a box and manipulates the direction of the ball upon detection
@@ -63,7 +67,7 @@ public class BlockBounce {
 						return;
 					}
 				}
-				if((((trueBlocksX.get(i) - 1.5*radius) < (rx + vx)) && (trueBlocksX.get(i) > (rx + vx))) && // detects left side of box
+				else if((((trueBlocksX.get(i) - 1.5*radius) < (rx + vx)) && (trueBlocksX.get(i) > (rx + vx))) && // detects left side of box
 				((trueBlocksY.get(i) + 1.5*radius) > (ry + vy) && (trueBlocksY.get(i) - 1.5*radius) < (ry + vy))){
 					vx = -vx;
 					if(flag){
@@ -71,7 +75,7 @@ public class BlockBounce {
 						return;
 					}
 				}
-				if((((trueBlocksY.get(i) + 1.5*radius) > (ry + vy)) && (trueBlocksY.get(i) < (ry + vy))) && // detects top of box
+				else if((((trueBlocksY.get(i) + 1.5*radius) > (ry + vy)) && (trueBlocksY.get(i) < (ry + vy))) && // detects top of box
 				((trueBlocksX.get(i) + 1.5*radius) > (rx + vx) && (trueBlocksX.get(i) - 1.5*radius) < (rx + vx))){
 					vy = -vy;
 					if(flag){
@@ -79,15 +83,14 @@ public class BlockBounce {
 						return;
 					}
 				}
-				if((((trueBlocksY.get(i) - 1.5*radius) < (ry + vy)) && (trueBlocksY.get(i) > (ry + vy))) && // detects bottom of box
+				else if((((trueBlocksY.get(i) - 1.5*radius) < (ry + vy)) && (trueBlocksY.get(i) > (ry + vy))) && // detects bottom of box
 				((trueBlocksX.get(i) + 1.5*radius) > (rx + vx) && (trueBlocksX.get(i) - 1.5*radius) < (rx + vx))){
 					vy = -vy;
 					if(flag){
 						disappear(i);
 						return;
 					}
-				}
-				
+				}			
 			}	
 		}
 
@@ -109,15 +112,16 @@ public class BlockBounce {
 			if(grid[tempX][tempY]){
 				i--;
 				continue;
-			}else grid[tempX][tempY] = true;
+			}
+			else grid[tempX][tempY] = true;
 		}
 	}
 
 	private static void grid(){
 		//generate a grid on top of the canvas
 		int count = 0;
-		for(int i = 0; i < 20; i++)
-			for(int j = 0; j < 20; j++){
+		for(int i = 0; i < 20; i++) {
+			for(int j = 0; j < 20; j++) {
 				if(!grid[j][i]){
 				StdDraw.setPenColor(StdDraw.LIGHT_GRAY);
 				StdDraw.filledRectangle(2*radius*(j-xScale+2.5*border), 2*radius*(i-yScale+2.5*border), radius, radius);
@@ -127,25 +131,27 @@ public class BlockBounce {
 					StdDraw.setPenColor(StdDraw.BLUE);
 					StdDraw.text(0, 0, "MISSION COMPLETE!");
 					}
-				}else{
+				}
+				else{
 					StdDraw.setPenColor(StdDraw.BLUE);
 					StdDraw.filledRectangle(2*radius*(j-xScale+2.5*border), 2*radius*(i-yScale+2.5*border), radius, radius);
 					trueBlocksX.add(2*radius*(j-xScale+2.5*border));
 					trueBlocksY.add(2*radius*(i-yScale+2.5*border));
 				}
 			}
+		}
 	}
 
   private static void repaint() {
-	// clear the background                                                                                      
-      StdDraw.clear();
-      StdDraw.setPenColor(StdDraw.LIGHT_GRAY);
-      StdDraw.filledRectangle(0, 0, xScale, yScale);
-      // draw ball on the screen
-	grid();
-      StdDraw.setPenColor(StdDraw.BLACK);
-      StdDraw.filledCircle(rx, ry, radius);
-      StdDraw.show();
+		// clear the background                                                                                      
+    StdDraw.clear();
+    StdDraw.setPenColor(StdDraw.LIGHT_GRAY);
+    StdDraw.filledRectangle(0, 0, xScale, yScale);
+    // draw ball on the screen
+		grid();
+    StdDraw.setPenColor(StdDraw.BLACK);
+    StdDraw.filledCircle(rx, ry, radius);
+    StdDraw.show();
   }
 
   public static void main(String[] args) {
