@@ -28,7 +28,6 @@ public class Bounce {
   private static boolean flag = false;
   private static boolean quit = true;
   private static boolean[][] grid = new boolean[20][20]; // tracks what type of block is filled
-  private static HashMap<Integer, Integer> filledBlocks = new HashMap<>();
 
   private static void setup() {
     // prepare the canvas                                                                                        
@@ -50,15 +49,13 @@ public class Bounce {
       // bounce off wall according to law of elastic collision                                                     
     if ((Math.abs(rx + vx) > xScale - radius)) vx = -vx;
     if ((Math.abs(ry + vy) > yScale - radius)) vy = -vy;
-
     // update position                                                                                           
     rx = rx + vx;
     ry = ry + vy;
+    detect();
 
     head[0] += vx;
     head[1] += vy;
-
-    detect();
 
   }
 
@@ -93,15 +90,113 @@ public class Bounce {
         else{
           StdDraw.setPenColor(StdDraw.BLUE);
           StdDraw.filledRectangle(2 * radius * (j - xScale + 2.5 * border), 2 * radius * (i - yScale + 2.5 * border), radius, radius);
-          filledBlocks.put((int) Math.rint(2 * radius * (j - xScale + 2.5 * border)), (int) Math.rint(2 * radius * (i - yScale + 2.5 * border)));
         }
       }
     }
   }
 
+  private static boolean direction(double speed) {
+    if (speed < 0) {
+      return false;
+    }
+    else 
+    {
+      return true;
+    }
+  }
+
+  private static boolean isXGoingOut() {
+    if ((Math.abs(rx + vx) > xScale - radius)) return false;
+    else return true;
+  }
+
+  private static boolean isYGoingOut() {
+    if ((Math.abs(ry + vy) > yScale - radius)) return false;
+    else return true;
+  }
+
   private static void detect() {
-    if (grid[(int) Math.rint(rx + 10)][(int) Math.rint(ry + 10)]) {
-      System.out.println("hit");
+
+    int gridX = 0;
+    int gridY = 0;
+
+    if (isYGoingOut()) {
+      if (direction(vy)) {
+        gridY = 19;
+      }
+      else {
+        gridY = 0;
+      }
+    }
+    else if (direction(vy)) {
+      gridY = (int) Math.rint(ry + radius) + 9;
+    }
+    else {
+      gridY = (int) Math.rint(ry - radius) + 10;
+    }
+
+    if (isXGoingOut()) {
+      if (direction(vx)) {
+        gridX = 19;
+      }
+      else {
+        gridX = 0;
+      }
+    }
+    else if (direction(vx)) { 
+      gridX = (int) Math.rint(rx + radius) + 9;
+    }
+    else {
+      gridX = (int) Math.rint(rx - radius) + 10;
+    }
+
+    if (direction(vx) && direction(vy) && grid[gridX][gridY]) {
+      if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) < Math.abs((ry + radius) - Math.abs(Math.rint(ry + radius)))) {
+        vx = -vx;
+      }
+      else if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) > Math.abs(Math.abs(ry + radius) - Math.abs(Math.rint(ry + radius)))) {
+        vy = -vy;
+      }
+      else {
+        vx = -vx;
+        vy = -vy;
+      }
+    }
+    else if (!direction(vx) && direction(vy) && grid[gridX][gridY]) {
+      if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) < Math.abs(Math.abs(ry + radius) - Math.abs(Math.rint(ry + radius)))) {
+        vx = -vx;
+      }
+      else if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) > Math.abs(Math.abs(ry + radius) - Math.abs(Math.rint(ry + radius)))) {
+        vy = -vy;
+      }
+      else {
+        vx = -vx;
+        vy = -vy;
+      }
+    }
+    else if (direction(vx) && !direction(vy) && grid[gridX][gridY]) {
+      if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) < Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
+        vx = -vx;
+      }
+      else if (Math.abs(Math.abs(rx + radius) - Math.abs(Math.rint(rx + radius))) > Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
+        vy = -vy;
+      }
+      else {
+        vx = -vx;
+        vy = -vy;
+      }
+    }
+    else if ((!direction(vx) && !direction(vy) && grid[gridX][gridY])) {
+      if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) < Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
+        vx = -vx;
+      }
+      else if (Math.abs(Math.abs(rx - radius) - Math.abs(Math.rint(rx - radius))) > Math.abs(Math.abs(ry - radius) - Math.abs(Math.rint(ry - radius)))) {
+        vy = -vy;
+      }
+      else {
+        vx = -vx;
+        vy = -vy;
+      }
     }
   } 
 
