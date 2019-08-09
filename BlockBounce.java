@@ -9,6 +9,7 @@
  ******************************************************************************/
 
 import java.util.*;
+import java.lang.*;
 public class BlockBounce {
   // Constants                                                                                                     
   private final static double xScale = 10.0;
@@ -57,23 +58,31 @@ public class BlockBounce {
 			boolean hitX = false;
 			boolean hitY = false;
 			for(int i = 0; i < trueBlocksX.size(); i++){ 
-				if((((trueBlocksX.get(i) + 1.5*radius) > (rx + vx)) && (trueBlocksX.get(i) < (rx + vx))) && // detects right side of box
-				((trueBlocksY.get(i) + 1.5*radius) > (ry + vy) && (trueBlocksY.get(i) - 1.5*radius) < (ry + vy))){
+				if((((trueBlocksX.get(i) + 1.5 * radius) > (rx + vx)) && (trueBlocksX.get(i) < (rx + vx))) && // detects right side of box
+				((trueBlocksY.get(i) + 1.5 * radius) > (ry + vy) && (trueBlocksY.get(i) - 1.5 * radius) < (ry + vy))){
 					hitX = true;
 				}
-				else if((((trueBlocksX.get(i) - 1.5*radius) < (rx + vx)) && (trueBlocksX.get(i) > (rx + vx))) && // detects left side of box
-				((trueBlocksY.get(i) + 1.5*radius) > (ry + vy) && (trueBlocksY.get(i) - 1.5*radius) < (ry + vy))){
+				else if((((trueBlocksX.get(i) - 1.5 * radius) < (rx + vx)) && (trueBlocksX.get(i) > (rx + vx))) && // detects left side of box
+				((trueBlocksY.get(i) + 1.5 * radius) > (ry + vy) && (trueBlocksY.get(i) - 1.5 * radius) < (ry + vy))){
 					hitX = true;
 				}
-				else if((((trueBlocksY.get(i) + 1.5*radius) > (ry + vy)) && (trueBlocksY.get(i) < (ry + vy))) && // detects top of box
-				((trueBlocksX.get(i) + 1.5*radius) > (rx + vx) && (trueBlocksX.get(i) - 1.5*radius) < (rx + vx))){
+				if((((trueBlocksY.get(i) + 1.5 * radius) > (ry + vy)) && (trueBlocksY.get(i) < (ry + vy))) && // detects top of box
+				((trueBlocksX.get(i) + 1.5 * radius) > (rx + vx) && (trueBlocksX.get(i) - 1.5 * radius) < (rx + vx))){
 					hitY = true;
 				}
-				else if((((trueBlocksY.get(i) - 1.5*radius) < (ry + vy)) && (trueBlocksY.get(i) > (ry + vy))) && // detects bottom of box
-				((trueBlocksX.get(i) + 1.5*radius) > (rx + vx) && (trueBlocksX.get(i) - 1.5*radius) < (rx + vx))){
+				else if((((trueBlocksY.get(i) - 1.5 * radius) < (ry + vy)) && (trueBlocksY.get(i) > (ry + vy))) && // detects bottom of box
+				((trueBlocksX.get(i) + 1.5 * radius) > (rx + vx) && (trueBlocksX.get(i) - 1.5 * radius) < (rx + vx))){
 					hitY = true;
 				}
-				if (hitX) {
+				if (hitX && hitY) {
+					if (Math.abs(trueBlocksX.get(i) - rx) > Math.abs(trueBlocksY.get(i) - ry)) {
+						vx = -vx;
+					}
+					else {
+						vy = -vy;
+					}
+				}
+				else if (hitX) {
 					vx = -vx;
 				}
 				else if (hitY) {
@@ -178,6 +187,31 @@ public class BlockBounce {
 		generateBlocks(N);
     // main animation loop                                                                                       
     while (quit)  {
+    	if (StdDraw.isMousePressed()) {
+    		int x = 0;
+    		int y = 0;
+    		if (StdDraw.mouseX() + 10 > 19) {
+    			x = 19;
+    		}
+    		else if (StdDraw.mouseX() + 10 < 0) {
+    			x = 0;
+    		}
+    		else {
+    			x = (int)(StdDraw.mouseX() + 10);
+    		}
+
+    		if (StdDraw.mouseY() + 10 > 19) {
+    			y = 19;
+    		}
+    		else if (StdDraw.mouseY() + 10 < 0) {
+    			y = 0;
+    		}
+    		else {
+    			y = (int)(StdDraw.mouseY() + 10);
+    		}
+
+    		grid[x][y] = true;
+    	}
       updateBallPosition();
       repaint();
       StdDraw.pause(4);
