@@ -4,4 +4,5 @@ Created a program that essentially extends from Princeton's BouncingBall.java. T
 
 
 ![image](https://media.giphy.com/media/cjQASQa8vsU4OZRUVa/giphy.gif)
+
 Bouncing Ball
